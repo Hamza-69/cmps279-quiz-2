@@ -84,3 +84,7 @@ def serialize_book(book) -> dict:
       "created_at": book["created_at"].isoformat(),
       "updated_at": book["updated_at"].isoformat(),
   }
+
+class BookListResponse(BaseModel):
+  books: List[Book]
+  next_cursor: str | None = None

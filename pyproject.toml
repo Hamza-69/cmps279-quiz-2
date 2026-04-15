@@ -6,7 +6,6 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "boto3>=1.42.89",
-    "bson>=0.5.10",
     "dotenv>=0.9.9",
     "fastapi>=0.135.3",
     "pymongo>=4.16.0",
