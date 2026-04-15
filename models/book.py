@@ -61,10 +61,26 @@ class BookUpdate(BaseModel):
   
 class BookSearch(BaseModel):
   query: str | None = None
-  sorted_by: SortBy | None = None
-  sort_order: SortOrder | None = None
+  sorted_by: SortBy = SortBy.Title
+  sort_order: SortOrder = SortOrder.Ascending
   category_filter_by: List[Category] | None = None
   year_from: int | None = None
   year_to: int | None = None
   cursor: str | None = None
   limit: int | None = None
+
+def serialize_book(book) -> dict:
+  return {
+      "id": str(book["_id"]),
+      "title": book["title"],
+      "description": book["description"],
+      "author": book["author"],
+      "year": book["year"],
+      "category": book["category"],
+      "cover_image": book["cover_image"],
+      "is_borrowed": book["is_borrowed"],
+      "due_date": book["due_date"].isoformat() if book["due_date"] else None,
+      "borrow_date": book["borrow_date"].isoformat() if book["borrow_date"] else None,
+      "created_at": book["created_at"].isoformat(),
+      "updated_at": book["updated_at"].isoformat(),
+  }
