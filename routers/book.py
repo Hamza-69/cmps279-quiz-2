@@ -48,7 +48,8 @@ def build_cursor_filter(cursor_data: dict, sort_order: str) -> dict:
 
 @router.post("/", response_model=Book, status_code=201, summary="Create a new book")
 def create_book(book: BookCreate):
-    cover_url = upload_base64_image(book.cover_image, folder="covers")
+    if book.cover_image:
+        book.cover_image = upload_base64_image(book.cover_image, folder="covers")
     now = datetime.now(timezone.utc)
     search_text = f"{book.title} {book.description} {book.author} {book.category.value}"
     doc = {
@@ -57,7 +58,7 @@ def create_book(book: BookCreate):
         "author": book.author,
         "year": book.year,
         "category": book.category.value,
-        "cover_image": cover_url,
+        "cover_image": cover_url if (cover_url := book.cover_image) else None,
         "search_text": search_text,
         "is_borrowed": False,
         "due_date": None,
@@ -83,23 +84,30 @@ def get_books(params: BookSearch = Depends()):
         if params.year_to is not None:
             year_filter["$lte"] = params.year_to
         filter_dict["year"] = year_filter
-
-    # Vector search path
+        
     if params.query:
-        pipeline = [
-            {
-                "$vectorSearch": {
-                    "index": "auto_vector_index",
-                    "path": "search_text",
-                    "query": params.query,
-                    "numCandidates": limit * 10,
-                    "limit": limit,
+        try:
+            pipeline = [
+                {
+                    "$vectorSearch": {
+                        "index": "auto_vector_index",
+                        "path": "search_text",
+                        "query": params.query,
+                        "numCandidates": limit * 10,
+                        "limit": limit,
+                    }
                 }
-            }
-        ]
-        if filter_dict:
-            pipeline.append({"$match": filter_dict})
-        raw = list(books_collection.aggregate(pipeline))
+            ]
+            if filter_dict:
+                pipeline.append({"$match": filter_dict})
+            raw = list(books_collection.aggregate(pipeline))
+            if not raw:
+                raise ValueError("empty vector results")
+        except Exception:
+            regex = {"$regex": params.query, "$options": "i"}
+            text_filter = {"$or": [{"title": regex}, {"author": regex}, {"description": regex}]}
+            combined = {"$and": [filter_dict, text_filter]} if filter_dict else text_filter
+            raw = list(books_collection.find(combined).limit(limit))
         return BookListResponse(books=[Book(**serialize_book(b)) for b in raw], next_cursor=None)
 
     sort_field = params.sorted_by.value

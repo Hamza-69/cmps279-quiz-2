@@ -31,7 +31,7 @@ class Book(BaseModel):
   author: str
   year: int
   category: Category
-  cover_image: str
+  cover_image: str | None = None
   
   is_borrowed: bool = False
   due_date: date | None = None
@@ -46,7 +46,7 @@ class BookCreate(BaseModel):
   author: str
   year: int
   category: Category
-  cover_image: str
+  cover_image: str | None = None
 
 class BookUpdate(BaseModel):
   title: str | None = None
