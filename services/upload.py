@@ -39,7 +39,6 @@ def upload_base64_image(base64_string: str, folder: str = "misc") -> str:
     except Exception as e:
         raise RuntimeError(f"S3 Upload failed: {str(e)}")
 
-    endpoint = str(aws_endpoint_url).rstrip("/")
-    public_url = f"{endpoint}/{bucket_name}/{file_key}"
+    public_url = f"https://{bucket_name}.t3.tigrisfiles.io/{file_key}"
     
     return public_url
