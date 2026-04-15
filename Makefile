@@ -7,4 +7,4 @@ dev:
 	uv run uvicorn main:app --reload
 
 setup-vector-db:
-	cd services && uv run python setup.py
+	cd services && uv run python search.py
