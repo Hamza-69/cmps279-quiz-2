@@ -1,7 +1,7 @@
 from enum import Enum
 from pydantic import BaseModel
 from datetime import datetime, date
-from typing import List # Or list in newer Python
+from typing import List
 
 class Category(str, Enum):
   Fiction = "Fiction"
