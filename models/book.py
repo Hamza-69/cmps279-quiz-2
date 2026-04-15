@@ -1,5 +1,5 @@
 from enum import Enum
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime, date
 from typing import List
 
@@ -63,11 +63,14 @@ class BookSearch(BaseModel):
   query: str | None = None
   sorted_by: SortBy = SortBy.Title
   sort_order: SortOrder = SortOrder.Ascending
-  category_filter_by: List[Category] | None = None
+  category_filter_by: str | None = Field(
+      default=None,
+      description="Category filter separated by comma or pipe. Example: Fiction,Science",
+  )
   year_from: int | None = None
   year_to: int | None = None
   cursor: str | None = None
-  limit: int | None = None
+  limit: int = Field(default=20, ge=1, le=200)
 
 def serialize_book(book) -> dict:
   return {

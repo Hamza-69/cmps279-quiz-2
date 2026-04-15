@@ -1,12 +1,21 @@
-import json
 import base64
+import json
+import re
 from datetime import datetime, timezone
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+
 from bson import ObjectId
-from pymongo import ReturnDocument, ASCENDING, DESCENDING
+from fastapi import APIRouter, Depends, HTTPException, Response, status
+from pymongo import ASCENDING, DESCENDING, ReturnDocument
+from pymongo.errors import OperationFailure
 
 from models.book import (
-    Book, BookCreate, BookUpdate, BookSearch, BookListResponse, serialize_book
+    Book,
+    Category,
+    BookCreate,
+    BookListResponse,
+    BookSearch,
+    BookUpdate,
+    serialize_book,
 )
 from services.config import books_collection
 from services.search import embed
@@ -26,25 +35,83 @@ def get_object_id(id: str) -> ObjectId:
         raise HTTPException(status_code=422, detail=f"Invalid ID: '{id}'")
 
 
-def encode_cursor(sort_field, sort_value, last_id) -> str:
-    payload = {"sort_field": sort_field, "sort_value": sort_value, "last_id": last_id}
-    return base64.urlsafe_b64encode(json.dumps(payload, default=str).encode()).decode()
+def encode_cursor(sort_field, sort_order, sort_value, last_id) -> str:
+    payload = {
+        "sort_field": sort_field,
+        "sort_order": sort_order,
+        "sort_value": sort_value,
+        "last_id": last_id,
+    }
+    return base64.urlsafe_b64encode(json.dumps(payload).encode()).decode()
 
 
 def decode_cursor(cursor: str) -> dict:
     try:
-        return json.loads(base64.urlsafe_b64decode(cursor.encode()).decode())
+        padded_cursor = cursor + ("=" * (-len(cursor) % 4))
+        cursor_data = json.loads(
+            base64.urlsafe_b64decode(padded_cursor.encode()).decode()
+        )
+        required_keys = {"sort_field", "sort_value", "last_id"}
+        if not required_keys.issubset(cursor_data):
+            raise ValueError("Missing cursor fields")
+        return cursor_data
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid cursor")
 
 
 def build_cursor_filter(cursor_data: dict, sort_order: str) -> dict:
     sf, sv = cursor_data["sort_field"], cursor_data["sort_value"]
-    lid = ObjectId(cursor_data["last_id"])
+    try:
+        lid = ObjectId(cursor_data["last_id"])
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid cursor")
     if sort_order == "asc":
         return {"$or": [{sf: {"$gt": sv}}, {sf: sv, "_id": {"$gt": lid}}]}
     else:
         return {"$or": [{sf: {"$lt": sv}}, {sf: sv, "_id": {"$lt": lid}}]}
+
+
+def run_regex_search(
+    filter_dict: dict, query: str, sort_field: str, sort_dir: int, limit: int
+) -> list:
+    regex = {"$regex": re.escape(query), "$options": "i"}
+    text_filter = {
+        "$or": [
+            {"search_text": regex},
+            {"title": regex},
+            {"author": regex},
+            {"description": regex},
+            {"category": regex},
+        ]
+    }
+    pipeline = [
+        {
+            "$match": {"$and": [filter_dict, text_filter]}
+            if filter_dict
+            else text_filter
+        },
+        {"$sort": {sort_field: sort_dir, "_id": sort_dir}},
+        {"$limit": limit + 1},
+    ]
+    return list(books_collection.aggregate(pipeline))
+
+
+def parse_category_filter(raw_category_filter: str) -> list[str] | None:
+    categories = [part.strip() for part in re.split(r"[|,]", raw_category_filter) if part.strip()]
+    if not categories:
+        raise HTTPException(status_code=422, detail="category_filter_by is empty")
+
+    if any(category.lower() == "all" for category in categories):
+        return None
+
+    allowed = {category.value for category in Category}
+    invalid_categories = [category for category in categories if category not in allowed]
+    if invalid_categories:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Invalid category_filter_by values: {', '.join(invalid_categories)}",
+        )
+    return categories
 
 
 @router.post("/", response_model=Book, status_code=201, summary="Create a new book")
@@ -69,61 +136,82 @@ def create_book(book: BookCreate):
         "updated_at": now,
     }
     result = books_collection.insert_one(doc)
-    return Book(**serialize_book(books_collection.find_one({"_id": result.inserted_id})))
+    return Book(
+        **serialize_book(books_collection.find_one({"_id": result.inserted_id}))
+    )
 
 
-@router.get("/", response_model=BookListResponse, summary="Search books with sorting, filtering and pagination")
+@router.get(
+    "/",
+    response_model=BookListResponse,
+    summary="Search books with sorting, filtering and pagination",
+)
 def get_books(params: BookSearch = Depends()):
-    limit = params.limit or 20
+    limit = params.limit
     sort_field = params.sorted_by.value
-    sort_dir = ASCENDING if params.sort_order.value == "asc" else DESCENDING
+    sort_order = params.sort_order.value
+    sort_dir = ASCENDING if sort_order == "asc" else DESCENDING
+    query = params.query.strip() if params.query else None
 
-    filter_dict = {}
+    base_filter = {}
     if params.category_filter_by:
-        filter_dict["category"] = {"$in": [c.value for c in params.category_filter_by]}
+        parsed_categories = parse_category_filter(params.category_filter_by)
+        if parsed_categories:
+            base_filter["category"] = {"$in": parsed_categories}
     if params.year_from is not None or params.year_to is not None:
         year_filter = {}
         if params.year_from is not None:
             year_filter["$gte"] = params.year_from
         if params.year_to is not None:
             year_filter["$lte"] = params.year_to
-        filter_dict["year"] = year_filter
+        base_filter["year"] = year_filter
 
+    cursor_clause = None
     if params.cursor:
         cursor_data = decode_cursor(params.cursor)
-        clause = build_cursor_filter(cursor_data, params.sort_order.value)
-        filter_dict = {"$and": [filter_dict, clause]} if filter_dict else clause
+        if cursor_data.get("sort_field") != sort_field:
+            raise HTTPException(
+                status_code=400, detail="Cursor does not match current sort field"
+            )
+        if cursor_data.get("sort_order") and cursor_data["sort_order"] != sort_order:
+            raise HTTPException(
+                status_code=400, detail="Cursor does not match current sort order"
+            )
+        cursor_clause = build_cursor_filter(cursor_data, sort_order)
 
-    if params.query:
+    filter_dict = base_filter
+    if cursor_clause:
+        filter_dict = (
+            {"$and": [base_filter, cursor_clause]} if base_filter else cursor_clause
+        )
+
+    if query:
+        vector_limit = min(max((limit + 1) * 5, 120), 1000)
+        num_candidates = min(max(vector_limit * 10, 400), 10000)
+        vector_stage = {
+            "$vectorSearch": {
+                "index": "vector_index",
+                "path": "embedding",
+                "queryVector": embed(query),
+                "numCandidates": num_candidates,
+                "limit": vector_limit,
+            }
+        }
+        if base_filter:
+            vector_stage["$vectorSearch"]["filter"] = base_filter
+
         pipeline = [
-            {
-                "$vectorSearch": {
-                    "index": "vector_index",
-                    "path": "embedding",
-                    "queryVector": embed(params.query),
-                    "numCandidates": 200,
-                    "limit": 100,
-                }
-            },
+            vector_stage,
             {"$addFields": {"_score": {"$meta": "vectorSearchScore"}}},
-            {"$match": {"_score": {"$gte": 0.75}}},
-            *([ {"$match": filter_dict} ] if filter_dict else []),
+            {"$match": {"_score": {"$gte": 0.55}}},
+            *([{"$match": cursor_clause}] if cursor_clause else []),
             {"$sort": {sort_field: sort_dir, "_id": sort_dir}},
             {"$limit": limit + 1},
         ]
         try:
             raw = list(books_collection.aggregate(pipeline))
-            if not raw:
-                raise ValueError("empty vector results")
-        except Exception:
-            regex = {"$regex": params.query, "$options": "i"}
-            text_filter = {"$or": [{"title": regex}, {"author": regex}, {"description": regex}]}
-            pipeline = [
-                {"$match": {"$and": [filter_dict, text_filter]} if filter_dict else text_filter},
-                {"$sort": {sort_field: sort_dir, "_id": sort_dir}},
-                {"$limit": limit + 1},
-            ]
-            raw = list(books_collection.aggregate(pipeline))
+        except OperationFailure:
+            raw = run_regex_search(filter_dict, query, sort_field, sort_dir, limit)
     else:
         pipeline = [
             {"$match": filter_dict},
@@ -137,9 +225,13 @@ def get_books(params: BookSearch = Depends()):
     next_cursor = None
     if has_next and page:
         last = page[-1]
-        next_cursor = encode_cursor(sort_field, last[sort_field], str(last["_id"]))
+        next_cursor = encode_cursor(
+            sort_field, sort_order, last[sort_field], str(last["_id"])
+        )
 
-    return BookListResponse(books=[Book(**serialize_book(b)) for b in page], next_cursor=next_cursor)
+    return BookListResponse(
+        books=[Book(**serialize_book(b)) for b in page], next_cursor=next_cursor
+    )
 
 
 @router.get("/{id}", response_model=Book, summary="Get a book by ID")
@@ -159,17 +251,19 @@ def update_book(id: str, updates: BookUpdate):
         raise HTTPException(status_code=400, detail="No fields to update")
 
     if "cover_image" in update_data:
-        update_data["cover_image"] = upload_base64_image(update_data["cover_image"], folder="covers")
+        update_data["cover_image"] = upload_base64_image(
+            update_data["cover_image"], folder="covers"
+        )
 
     if {"title", "description", "author", "category"} & update_data.keys():
         existing = books_collection.find_one({"_id": oid})
         if not existing:
             raise HTTPException(status_code=404, detail="Book not found")
         merged = {
-            "title":       update_data.get("title",       existing["title"]),
+            "title": update_data.get("title", existing["title"]),
             "description": update_data.get("description", existing["description"]),
-            "author":      update_data.get("author",      existing["author"]),
-            "category":    update_data.get("category",    existing["category"]),
+            "author": update_data.get("author", existing["author"]),
+            "category": update_data.get("category", existing["category"]),
         }
         cat = merged["category"]
         new_search_text = (
