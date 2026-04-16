@@ -1,8 +1,8 @@
 # Book Library — Full Stack Mobile Application
 
-**Student:** Hamza El Rachdi
-**Student ID:** 202502882 
-**Course:** CMPS 279 — Mobile Back End, Spring 2025–26
+**Student:** Hamza El Rachdi  
+**Student ID:** 202502882   
+**Course:** CMPS 279 — Mobile Back End, Spring 2025–26  
 
 ---
 
@@ -14,7 +14,7 @@
 
 ## Screenshots
 
-| Book List | Search & Filter | Add Book | Camera Capture |
+| Book List | Search & Filter | Add Book - No Camera | Add Book - Camera Capture |
 |---|---|---|---|
 | ![Book List](screenshots/book_list.png) | ![Search](screenshots/search_filter.png) | ![Add Book](screenshots/add_book.png) | ![Camera](screenshots/camera.png) |
 
