@@ -17,24 +17,29 @@ public class BookListViewModel extends ViewModel {
 
     private static final int PAGE_SIZE = 20;
 
-    // Exposed LiveData
+    
+
     public final MutableLiveData<List<Book>> books = new MutableLiveData<>(new ArrayList<>());
     public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
     public final MutableLiveData<Boolean> hasMore = new MutableLiveData<>(true);
     public final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
-    // Pagination state
+    
+
     private String nextCursor = null;
 
-    // Current filter state
+    
+
     private String currentQuery = null;
-    private String currentCategory = null;   // null means all
+    private String currentCategory = null;   
+
     private String currentSortedBy = "title";
     private String currentSortOrder = "asc";
     private Integer currentYearFrom = null;
     private Integer currentYearTo = null;
 
-    // Guard against concurrent loads
+    
+
     private boolean loading = false;
 
     public void setFilters(String query, String category, String sortedBy, String sortOrder,
@@ -47,10 +52,8 @@ public class BookListViewModel extends ViewModel {
         currentYearTo = yearTo;
     }
 
-    /**
-     * Load books. Pass reset=true to start a fresh query (clears list + cursor).
-     * Pass reset=false to append the next page.
-     */
+    
+
     public void loadBooks(boolean reset) {
         if (loading) return;
         if (!reset && Boolean.FALSE.equals(hasMore.getValue())) return;

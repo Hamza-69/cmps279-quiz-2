@@ -31,14 +31,14 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         this.listener = listener;
     }
 
-    /** Replace the full list (used for fresh loads and search resets). */
+    
     public void setBooks(List<Book> newBooks) {
         books.clear();
         if (newBooks != null) books.addAll(newBooks);
         notifyDataSetChanged();
     }
 
-    /** Append more books (used for infinite scroll pagination). */
+    
     public void appendBooks(List<Book> moreBooks) {
         if (moreBooks == null || moreBooks.isEmpty()) return;
         int start = books.size();
@@ -78,10 +78,12 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             binding.tvAuthor.setText(book.getAuthor());
             binding.tvYearCategory.setText(book.getYear() + " · " + book.getCategory());
 
-            // Borrowed badge
+            
+
             binding.chipBorrowed.setVisibility(book.isBorrowed() ? View.VISIBLE : View.GONE);
 
-            // Cover image with Glide
+            
+
             Context ctx = binding.getRoot().getContext();
             if (book.getCoverImage() != null && !book.getCoverImage().isEmpty()) {
                 Glide.with(ctx)
@@ -97,7 +99,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
                 binding.ivCover.setBackgroundResource(R.drawable.bg_book_cover_placeholder);
             }
 
-            // Click listener
+            
+
             binding.getRoot().setOnClickListener(v -> {
                 if (listener != null) listener.onBookClick(book);
             });

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Book Library</string>
 
-    <!-- Book List -->
+    
     <string name="search_books_hint">Search books…</string>
     <string name="all_categories">All Categories</string>
     <string name="sort_by_title">Sort: Title</string>
@@ -10,7 +10,7 @@
     <string name="no_books_found">No books found</string>
     <string name="loading">Loading…</string>
 
-    <!-- Add / Edit Book -->
+    
     <string name="add_book">Add Book</string>
     <string name="edit_book">Edit Book</string>
     <string name="title_hint">Title *</string>
@@ -26,7 +26,7 @@
     <string name="browse_gallery">Browse Gallery</string>
     <string name="camera_permission_required">Camera permission is required to take photos</string>
 
-    <!-- Detail -->
+    
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="delete_confirm_title">Delete Book</string>
@@ -46,7 +46,7 @@
     <string name="return_confirm_message">Late fee is $%1$d (%2$d day(s) × $2). Return this book now?</string>
     <string name="return_confirm_message_no_fee">No late fee. Return this book now?</string>
 
-    <!-- Categories -->
+    
     <string-array name="categories">
         <item>Fiction</item>
         <item>Non-Fiction</item>
@@ -79,7 +79,7 @@
         <item>Year Oldest</item>
     </string-array>
 
-    <!-- Errors -->
+    
     <string name="error_title_required">Title is required</string>
     <string name="error_author_required">Author is required</string>
     <string name="error_year_required">Year is required</string>

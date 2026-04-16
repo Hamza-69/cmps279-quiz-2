@@ -54,7 +54,8 @@ public class AddBookFragment extends Fragment {
     private boolean isGalleryMode = false;
     private boolean imageCaptured = false;
 
-    // Gallery picker launcher
+    
+
     private final ActivityResultLauncher<String> galleryLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
                 if (uri != null) onGalleryImageSelected(uri);
@@ -82,7 +83,8 @@ public class AddBookFragment extends Fragment {
         setupSubmitButton();
         observeViewModel();
 
-        // Default to camera mode
+        
+
         switchToCameraMode();
     }
 
@@ -153,7 +155,8 @@ public class AddBookFragment extends Fragment {
 
     private void switchToGalleryMode() {
         updateToggleButtons(false);
-        // Stop camera
+        
+
         if (cameraProvider != null) cameraProvider.unbindAll();
 
         binding.layoutCameraActions.setVisibility(View.GONE);

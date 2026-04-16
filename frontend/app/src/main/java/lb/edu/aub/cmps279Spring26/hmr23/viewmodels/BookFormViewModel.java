@@ -11,10 +11,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * ViewModel shared by AddBookFragment and EditBookFragment.
- * Handles image selection, book creation, and book update.
- */
 public class BookFormViewModel extends ViewModel {
 
     public final MutableLiveData<Book> result = new MutableLiveData<>();
@@ -76,7 +72,7 @@ public class BookFormViewModel extends ViewModel {
                 });
     }
 
-    /** Reset result so a re-opened form doesn't auto-navigate. */
+    
     public void consumeResult() {
         result.setValue(null);
     }

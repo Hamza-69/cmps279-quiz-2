@@ -35,7 +35,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Image mode toggle -->
+            
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
                     app:strokeColor="@color/colorAccent" />
             </LinearLayout>
 
-            <!-- Camera preview container -->
+            
             <FrameLayout
                 android:id="@+id/cameraContainer"
                 android:layout_width="match_parent"
@@ -93,7 +93,7 @@
                     app:implementationMode="compatible" />
             </FrameLayout>
 
-            <!-- Captured / selected image thumbnail -->
+            
             <ImageView
                 android:id="@+id/ivImagePreview"
                 android:layout_width="match_parent"
@@ -104,7 +104,7 @@
                 android:scaleType="centerCrop"
                 android:visibility="gone" />
 
-            <!-- Camera actions row -->
+            
             <LinearLayout
                 android:id="@+id/layoutCameraActions"
                 android:layout_width="match_parent"
@@ -132,7 +132,7 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-            <!-- Gallery actions row -->
+            
             <LinearLayout
                 android:id="@+id/layoutGalleryActions"
                 android:layout_width="match_parent"
@@ -160,14 +160,14 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-            <!-- Divider -->
+            
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginBottom="16dp"
                 android:background="@color/colorDivider" />
 
-            <!-- Title -->
+            
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutTitle"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -186,7 +186,7 @@
                     android:textColor="@color/colorTextPrimary" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Description -->
+            
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutDescription"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -207,7 +207,7 @@
                     android:textColor="@color/colorTextPrimary" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Author -->
+            
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutAuthor"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -226,7 +226,7 @@
                     android:textColor="@color/colorTextPrimary" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Year -->
+            
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutYear"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -245,7 +245,7 @@
                     android:textColor="@color/colorTextPrimary" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Category spinner -->
+            
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -262,7 +262,7 @@
                 android:background="@drawable/bg_spinner"
                 android:padding="8dp" />
 
-            <!-- Submit button -->
+            
             <Button
                 android:id="@+id/btnSubmit"
                 style="@style/Widget.BookLibrary.Button.Teal"

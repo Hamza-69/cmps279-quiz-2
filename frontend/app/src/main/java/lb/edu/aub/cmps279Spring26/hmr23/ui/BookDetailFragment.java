@@ -79,7 +79,8 @@ public class BookDetailFragment extends Fragment {
         binding.tvCategory.setText(book.getCategory());
         binding.tvDescription.setText(book.getDescription());
 
-        // Borrowed status
+        
+
         if (book.isBorrowed()) {
             binding.chipBorrowed.setVisibility(View.VISIBLE);
             binding.tvStatus.setText(getString(R.string.borrowed));
@@ -112,7 +113,8 @@ public class BookDetailFragment extends Fragment {
             binding.tvLateFee.setVisibility(View.GONE);
         }
 
-        // Cover image
+        
+
         if (book.getCoverImage() != null && !book.getCoverImage().isEmpty()) {
             Glide.with(this)
                     .load(book.getCoverImage())
@@ -126,15 +128,18 @@ public class BookDetailFragment extends Fragment {
             binding.ivCover.setBackgroundResource(R.drawable.bg_book_cover_placeholder);
         }
 
-        // Edit button
+        
+
         binding.btnEdit.setOnClickListener(v ->
                 Navigation.findNavController(requireView())
                         .navigate(R.id.action_detail_to_edit));
 
-        // Delete button
+        
+
         binding.btnDelete.setOnClickListener(v -> confirmDelete(book.getId()));
 
-        // Borrow / Return button
+        
+
         binding.btnBorrowReturn.setText(book.isBorrowed() ? R.string.return_book : R.string.take_book);
         binding.btnBorrowReturn.setOnClickListener(v -> {
             if (book.isBorrowed()) {

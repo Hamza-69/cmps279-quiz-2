@@ -37,11 +37,13 @@ public class BookListFragment extends Fragment {
     private BookAdapter adapter;
     private LinearLayoutManager layoutManager;
 
-    // Debounce search input by 500 ms
+    
+
     private final Handler debounceHandler = new Handler(Looper.getMainLooper());
     private Runnable debounceRunnable;
 
-    // Sort arrays matching strings.xml sort_options order
+    
+
     private static final String[] SORT_BY_VALUES = {
             "title", "title", "author", "author", "year", "year"
     };
@@ -72,7 +74,8 @@ public class BookListFragment extends Fragment {
         setupFab();
         observeViewModel();
 
-        // Initial load
+        
+
         listViewModel.loadBooks(true);
     }
 
@@ -86,11 +89,13 @@ public class BookListFragment extends Fragment {
         binding.recyclerBooks.setLayoutManager(layoutManager);
         binding.recyclerBooks.setAdapter(adapter);
 
-        // Infinite scroll
+        
+
         binding.recyclerBooks.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
-                if (dy <= 0) return; // only trigger on downward scroll
+                if (dy <= 0) return; 
+
                 int lastVisible = layoutManager.findLastVisibleItemPosition();
                 int total = adapter.getItemCount();
                 Boolean loading = listViewModel.isLoading.getValue();
@@ -103,7 +108,8 @@ public class BookListFragment extends Fragment {
             }
         });
 
-        // Navigate to detail on item click
+        
+
         adapter.setOnBookClickListener(book -> {
             sharedViewModel.setSelectedBookId(book.getId());
             Navigation.findNavController(requireView())
@@ -128,7 +134,8 @@ public class BookListFragment extends Fragment {
     }
 
     private void setupSpinners() {
-        // Category filter spinner
+        
+
         String[] categoryItems = getResources().getStringArray(R.array.categories_filter);
         ArrayAdapter<String> catAdapter = new ArrayAdapter<>(
                 requireContext(), android.R.layout.simple_spinner_item, categoryItems);
@@ -142,7 +149,8 @@ public class BookListFragment extends Fragment {
             @Override public void onNothingSelected(AdapterView<?> p) {}
         });
 
-        // Sort spinner
+        
+
         String[] sortItems = getResources().getStringArray(R.array.sort_options);
         ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(
                 requireContext(), android.R.layout.simple_spinner_item, sortItems);
@@ -197,7 +205,8 @@ public class BookListFragment extends Fragment {
             }
         });
 
-        // Refresh triggered by Add/Edit/Delete success
+        
+
         sharedViewModel.getListNeedsRefresh().observe(getViewLifecycleOwner(), needs -> {
             if (Boolean.TRUE.equals(needs)) {
                 sharedViewModel.consumeRefresh();

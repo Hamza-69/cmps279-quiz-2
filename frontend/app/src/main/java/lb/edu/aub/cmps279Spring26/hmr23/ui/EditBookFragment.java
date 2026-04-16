@@ -139,13 +139,15 @@ public class EditBookFragment extends Fragment {
         binding.editAuthor.setText(book.getAuthor());
         binding.editYear.setText(String.valueOf(book.getYear()));
 
-        // Select category spinner
+        
+
         String[] categories = getResources().getStringArray(R.array.categories);
         List<String> catList = Arrays.asList(categories);
         int idx = catList.indexOf(book.getCategory());
         if (idx >= 0) binding.spinnerCategory.setSelection(idx);
 
-        // Show existing cover image if any
+        
+
         if (book.getCoverImage() != null && !book.getCoverImage().isEmpty()) {
             Glide.with(this)
                     .load(book.getCoverImage())
@@ -351,7 +353,8 @@ public class EditBookFragment extends Fragment {
             if (book != null) {
                 formViewModel.consumeResult();
                 sharedViewModel.requestListRefresh();
-                // Pop back to detail (which will reload), or all the way to list
+                
+
                 Navigation.findNavController(requireView()).popBackStack();
             }
         });

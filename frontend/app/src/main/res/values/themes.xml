@@ -17,7 +17,7 @@
         <item name="android:windowBackground">@color/colorBackground</item>
     </style>
 
-    <!-- Button styles -->
+    
     <style name="Widget.BookLibrary.Button.Teal" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/colorAccent</item>
         <item name="android:textColor">@color/white</item>
@@ -36,7 +36,7 @@
         <item name="cornerRadius">8dp</item>
     </style>
 
-    <!-- Card style -->
+    
     <style name="Widget.BookLibrary.Card" parent="Widget.MaterialComponents.CardView">
         <item name="cardCornerRadius">8dp</item>
         <item name="cardElevation">3dp</item>

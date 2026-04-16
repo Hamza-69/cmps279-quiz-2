@@ -31,7 +31,8 @@ public class BookUpdate {
     @SerializedName("borrow_date")
     private String borrowDate;
 
-    // All-args constructor
+    
+
     public BookUpdate(String title, String description, String author, Integer year,
                       String category, String coverImage) {
         this.title = title;

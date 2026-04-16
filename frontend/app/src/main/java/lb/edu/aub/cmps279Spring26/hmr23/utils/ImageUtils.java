@@ -14,10 +14,8 @@ public class ImageUtils {
 
     private ImageUtils() {}
 
-    /**
-     * Compress a Bitmap to JPEG and encode as a base64 string
-     * with the data URI prefix expected by the backend.
-     */
+    
+
     public static String bitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 85, baos);
@@ -25,10 +23,8 @@ public class ImageUtils {
         return "data:image/jpeg;base64," + Base64.encodeToString(bytes, Base64.NO_WRAP);
     }
 
-    /**
-     * Decode a content URI into a Bitmap.
-     * Returns null on failure rather than throwing.
-     */
+    
+
     public static Bitmap uriToBitmap(Context context, Uri uri) {
         try (InputStream is = context.getContentResolver().openInputStream(uri)) {
             return BitmapFactory.decodeStream(is);
@@ -38,10 +34,8 @@ public class ImageUtils {
         }
     }
 
-    /**
-     * Scale a bitmap down so its longest side is at most maxDimension pixels,
-     * preserving aspect ratio. Helps keep base64 payload manageable.
-     */
+    
+
     public static Bitmap scaleBitmap(Bitmap source, int maxDimension) {
         int width = source.getWidth();
         int height = source.getHeight();

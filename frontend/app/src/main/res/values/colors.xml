@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Navy & Teal theme -->
+    
     <color name="colorPrimary">#1A2B4A</color>
     <color name="colorPrimaryDark">#12203A</color>
     <color name="colorAccent">#2DBDB6</color>
