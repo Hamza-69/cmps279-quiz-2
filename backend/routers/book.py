@@ -1,7 +1,7 @@
 import base64
 import json
 import re
-from datetime import datetime, timezone
+from datetime import date, datetime, time, timezone
 
 from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException, Response, status
@@ -26,6 +26,25 @@ router = APIRouter(
     tags=["books"],
     responses={404: {"description": "Not found"}},
 )
+
+
+def resolve_cover_image(cover_image: str | None) -> str | None:
+    if cover_image is None:
+        return None
+
+    normalized = cover_image.strip()
+    if not normalized:
+        return None
+
+    if normalized.startswith(("http://", "https://")):
+        return normalized
+
+    try:
+        return upload_base64_image(normalized, folder="covers")
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc))
 
 
 def get_object_id(id: str) -> ObjectId:
@@ -69,6 +88,13 @@ def build_cursor_filter(cursor_data: dict, sort_order: str) -> dict:
         return {"$or": [{sf: {"$gt": sv}}, {sf: sv, "_id": {"$gt": lid}}]}
     else:
         return {"$or": [{sf: {"$lt": sv}}, {sf: sv, "_id": {"$lt": lid}}]}
+
+
+def normalize_mongo_date_fields(payload: dict, fields: tuple[str, ...]) -> None:
+    for field in fields:
+        value = payload.get(field)
+        if isinstance(value, date) and not isinstance(value, datetime):
+            payload[field] = datetime.combine(value, time.min, tzinfo=timezone.utc)
 
 
 def run_regex_search(
@@ -117,7 +143,7 @@ def parse_category_filter(raw_category_filter: str) -> list[str] | None:
 @router.post("/", response_model=Book, status_code=201, summary="Create a new book")
 def create_book(book: BookCreate):
     if book.cover_image:
-        book.cover_image = upload_base64_image(book.cover_image, folder="covers")
+        book.cover_image = resolve_cover_image(book.cover_image)
     now = datetime.now(timezone.utc)
     search_text = f"{book.title} {book.description} {book.author} {book.category.value}"
     doc = {
@@ -247,13 +273,12 @@ def get_book(id: str):
 def update_book(id: str, updates: BookUpdate):
     oid = get_object_id(id)
     update_data = updates.model_dump(exclude_none=True)
+    normalize_mongo_date_fields(update_data, ("due_date", "borrow_date"))
     if not update_data:
         raise HTTPException(status_code=400, detail="No fields to update")
 
     if "cover_image" in update_data:
-        update_data["cover_image"] = upload_base64_image(
-            update_data["cover_image"], folder="covers"
-        )
+        update_data["cover_image"] = resolve_cover_image(update_data["cover_image"])
 
     if {"title", "description", "author", "category"} & update_data.keys():
         existing = books_collection.find_one({"_id": oid})

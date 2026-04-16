@@ -1,6 +1,6 @@
 from enum import Enum
 from pydantic import BaseModel, Field
-from datetime import datetime, date
+from datetime import date, datetime
 from typing import List
 
 class Category(str, Enum):
@@ -73,6 +73,15 @@ class BookSearch(BaseModel):
   limit: int = Field(default=20, ge=1, le=200)
 
 def serialize_book(book) -> dict:
+  def serialize_optional_date(value) -> str | None:
+      if value is None:
+          return None
+      if isinstance(value, datetime):
+          return value.date().isoformat()
+      if isinstance(value, date):
+          return value.isoformat()
+      return str(value)
+
   return {
       "id": str(book["_id"]),
       "title": book["title"],
@@ -82,8 +91,8 @@ def serialize_book(book) -> dict:
       "category": book["category"],
       "cover_image": book["cover_image"],
       "is_borrowed": book["is_borrowed"],
-      "due_date": book["due_date"].isoformat() if book["due_date"] else None,
-      "borrow_date": book["borrow_date"].isoformat() if book["borrow_date"] else None,
+      "due_date": serialize_optional_date(book["due_date"]),
+      "borrow_date": serialize_optional_date(book["borrow_date"]),
       "created_at": book["created_at"].isoformat(),
       "updated_at": book["updated_at"].isoformat(),
   }
