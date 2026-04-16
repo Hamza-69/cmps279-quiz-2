@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 from datetime import date, datetime
 from typing import List
 
+
 class Category(str, Enum):
   Fiction = "Fiction"
   NonFiction = "Non-Fiction"
@@ -12,34 +13,38 @@ class Category(str, Enum):
   Fantasy = "Fantasy"
   Mystery = "Mystery"
   Romance = "Romance"
-  
+
+
 class SortBy(str, Enum):
   Title = "title"
   Author = "author"
   Year = "year"
 
+
 class SortOrder(str, Enum):
   Ascending = "asc"
   Descending = "desc"
 
+
 class Book(BaseModel):
   id: str
-  
+
   title: str
   description: str
-  
+
   author: str
   year: int
   category: Category
   cover_image: str | None = None
-  
+
   is_borrowed: bool = False
   due_date: date | None = None
   borrow_date: date | None = None
-  
+
   created_at: datetime
   updated_at: datetime
-  
+
+
 class BookCreate(BaseModel):
   title: str
   description: str
@@ -47,6 +52,7 @@ class BookCreate(BaseModel):
   year: int
   category: Category
   cover_image: str | None = None
+
 
 class BookUpdate(BaseModel):
   title: str | None = None
@@ -58,7 +64,8 @@ class BookUpdate(BaseModel):
   is_borrowed: bool | None = None
   due_date: date | None = None
   borrow_date: date | None = None
-  
+
+
 class BookSearch(BaseModel):
   query: str | None = None
   sorted_by: SortBy = SortBy.Title
@@ -71,6 +78,12 @@ class BookSearch(BaseModel):
   year_to: int | None = None
   cursor: str | None = None
   limit: int = Field(default=20, ge=1, le=200)
+
+
+class BookListResponse(BaseModel):
+  books: List[Book]
+  next_cursor: str | None = None
+
 
 def serialize_book(book) -> dict:
   def serialize_optional_date(value) -> str | None:
@@ -96,7 +109,3 @@ def serialize_book(book) -> dict:
       "created_at": book["created_at"].isoformat(),
       "updated_at": book["updated_at"].isoformat(),
   }
-
-class BookListResponse(BaseModel):
-  books: List[Book]
-  next_cursor: str | None = None
