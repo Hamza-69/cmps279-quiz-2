@@ -13,4 +13,4 @@ WORKDIR /app
 COPY --from=builder /app/.venv .venv/
 COPY --from=builder /root/.cache /root/.cache
 COPY . .
-CMD ["/app/.venv/bin/fastapi", "run"]
+CMD [".venv/bin/uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
