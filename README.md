@@ -63,15 +63,16 @@ A complete end-to-end **Book Library** application:
 | MVVM architecture + SharedViewModel + LiveData | ✅ | |
 | Retrofit 2 + Gson networking | ✅ | |
 | Glide image loading | ✅ | |
-| CameraX in-app camera (not intent) | ✅ | |
-| Category + year range filtering | | ⭐ bonus |
-| Cursor-based keyset pagination (infinite scroll) | | ⭐ bonus |
+| CameraX in-app camera (not intent) | ⭐ bonus/ extra | |
+| Category + year range filtering | | ⭐ bonus/ extra |
+| Cursor-based keyset pagination (infinite scroll) | | ⭐ bonus/ extra |
 | Semantic vector search via `all-MiniLM-L6-v2` + Atlas Vector Search | | ⭐ extra |
 | Regex search fallback when vector index is unavailable | | ⭐ extra |
 | Amazon S3 image storage via Tigris | | ⭐ extra |
 | Deployed to Fly.io (live production URL) | | ⭐ extra |
 | APK exported and tested on a physical device | | ⭐ extra |
-| `uv` package manager instead of conda | | ⭐ modern tooling |
+| `uv` package manager instead of conda | | ⭐ modern tooling/ extra |
+| Book borrowing workflow with `is_borrowed`, `due_date`, and `borrow_date` fields | | ⭐ unique domain logic/ extra |
 
 ---
 
