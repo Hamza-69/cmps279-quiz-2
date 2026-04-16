@@ -1,3 +1,90 @@
 <resources>
-    <string name="app_name">frontend</string>
+    <string name="app_name">Book Library</string>
+
+    <!-- Book List -->
+    <string name="search_books_hint">Search books…</string>
+    <string name="all_categories">All Categories</string>
+    <string name="sort_by_title">Sort: Title</string>
+    <string name="sort_by_author">Sort: Author</string>
+    <string name="sort_by_year">Sort: Year</string>
+    <string name="no_books_found">No books found</string>
+    <string name="loading">Loading…</string>
+
+    <!-- Add / Edit Book -->
+    <string name="add_book">Add Book</string>
+    <string name="edit_book">Edit Book</string>
+    <string name="title_hint">Title *</string>
+    <string name="description_hint">Description *</string>
+    <string name="author_hint">Author *</string>
+    <string name="year_hint">Year *</string>
+    <string name="category_label">Category</string>
+    <string name="save_book">Save Book</string>
+    <string name="update_book">Update Book</string>
+    <string name="camera_mode">Camera</string>
+    <string name="gallery_mode">Gallery</string>
+    <string name="capture_photo">Capture Photo</string>
+    <string name="browse_gallery">Browse Gallery</string>
+    <string name="camera_permission_required">Camera permission is required to take photos</string>
+
+    <!-- Detail -->
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="delete_confirm_title">Delete Book</string>
+    <string name="delete_confirm_message">Are you sure you want to delete this book?</string>
+    <string name="cancel">Cancel</string>
+    <string name="borrowed">Borrowed</string>
+    <string name="available">Available</string>
+    <string name="due_date_label">Due: %s</string>
+    <string name="borrow_date_label">Borrowed: %s</string>
+    <string name="take_book">Take Book</string>
+    <string name="return_book">Return Book</string>
+    <string name="late_fee_label">Late fee: $%1$d (%2$d day(s) × $2)</string>
+    <string name="no_late_fee">Late fee: $0</string>
+    <string name="select_due_date_title">Select due date</string>
+    <string name="due_date_invalid">Due date must be today or later</string>
+    <string name="return_confirm_title">Return Book</string>
+    <string name="return_confirm_message">Late fee is $%1$d (%2$d day(s) × $2). Return this book now?</string>
+    <string name="return_confirm_message_no_fee">No late fee. Return this book now?</string>
+
+    <!-- Categories -->
+    <string-array name="categories">
+        <item>Fiction</item>
+        <item>Non-Fiction</item>
+        <item>Science</item>
+        <item>History</item>
+        <item>Biography</item>
+        <item>Fantasy</item>
+        <item>Mystery</item>
+        <item>Romance</item>
+    </string-array>
+
+    <string-array name="categories_filter">
+        <item>All Categories</item>
+        <item>Fiction</item>
+        <item>Non-Fiction</item>
+        <item>Science</item>
+        <item>History</item>
+        <item>Biography</item>
+        <item>Fantasy</item>
+        <item>Mystery</item>
+        <item>Romance</item>
+    </string-array>
+
+    <string-array name="sort_options">
+        <item>Title A-Z</item>
+        <item>Title Z-A</item>
+        <item>Author A-Z</item>
+        <item>Author Z-A</item>
+        <item>Year Newest</item>
+        <item>Year Oldest</item>
+    </string-array>
+
+    <!-- Errors -->
+    <string name="error_title_required">Title is required</string>
+    <string name="error_author_required">Author is required</string>
+    <string name="error_year_required">Year is required</string>
+    <string name="error_description_required">Description is required</string>
+    <string name="error_loading">Failed to load books</string>
+    <string name="error_saving">Failed to save book</string>
+    <string name="error_deleting">Failed to delete book</string>
 </resources>

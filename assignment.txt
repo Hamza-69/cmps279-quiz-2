@@ -1,0 +1,528 @@
+Skip to main content
+
+Enable accessibility for low vision
+
+Open the accessibility menu
+Accessibility
+Skip to main content
+Skip Navigation
+Navigation
+Home
+
+Dashboard
+
+Site pages
+
+My courses
+
+CMPS240_Meta_SP25-26
+
+CMPS271_Meta_SP25-26
+
+CMPS279_sl36_SP25-26
+
+Participants
+
+BadgesBadges
+
+Competencies
+
+Grades
+
+General
+
+Exams & Quizzes
+
+Project
+
+Module 1 - Introduction
+
+Module 2 - Android Development Basics
+
+A - Android
+
+AI
+
+Technical Skills LAB
+
+Mobile Back End
+
+ForumOnline Lecture - March 30, 2026
+
+FolderSubmodule 16 - MultiThreading and Mobile Backend
+
+ForumOnline Lecture - April 1, 2026
+
+FolderSubmodule 17 - Backend - Fast API and MongoDB
+
+ForumOnline Lecture - April 8, 2026
+
+ForumOnline Lecture - April 15, 2026
+
+AssignmentQuiz 2: Full Cycle App with Backend
+
+SOAN201_ak211_SP25-26
+
+HIST215_ta35_SP25-26
+
+CMPS271_mz96_SP25-26
+
+CMPS221_hr23_FA25-26
+
+Introduction to Information Literacy
+
+Title IX - AlcoholEdu for College [Students]
+
+logo
+Toggle notifications menu
+Toggle messaging drawer
+Hamza Rachidi
+Picture of Hamza Rachidi
+Home
+Policies
+My courses
+English ‎(en)‎
+Search courses
+Search courses
+Submit
+Page path
+Home My courses CMPS279_sl36_SP25-26 Mobile Back End Quiz 2: Full Cycle App with Backend
+Quiz 2: Full Cycle App with Backend
+
+Quiz II Assignment (15%)
+
+
+
+Full Stack Mobile Application with Python Backend
+Objective
+
+
+Build a complete end-to-end mobile application system consisting of:
+
+Python foundation skills (verified via certificate)
+
+A FastAPI backend
+
+A MongoDB database
+
+An Android mobile application (Java)
+
+
+
+This assignment ensures you can design, implement, and connect all layers of a modern application stack.
+
+Learning Outcomes
+
+
+By completing this assignment, students will be able to:
+
+Develop Python proficiency for backend development
+
+Design and implement REST APIs using FastAPI
+
+Model and store structured data in MongoDB
+
+Integrate Android apps with backend services
+
+Apply MVVM concepts and asynchronous networking
+
+Build original, working systems (not copy-based)
+
+🧩 PART 1 — Python Foundations (1.5–2 hours)
+
+
+Task
+Complete the Kaggle Python Course:
+
+https://www.kaggle.com/learn/python
+
+Focus on:
+
+Variables and types
+
+Lists and dictionaries
+
+Loops and conditionals
+
+Functions
+
+Download your certificate (with your name)
+
+Deliverable
+Upload certificate (PDF or screenshot)
+
+Be ready for TA oral verification
+
+🧩 PART 2 — Backend Development (FastAPI + MongoDB) (3 hours)
+🎯 Scenario (Personalized per Student)
+
+
+Each student must build a backend for a personalized domain based on:
+
+
+
+👉 Last digit of your student ID
+
+Digit
+
+Application Theme
+
+0
+
+Task Manager
+
+1
+
+Fitness Tracker
+
+2
+
+Book Library
+
+3
+
+Recipe Manager
+
+4
+
+Expense Tracker
+
+5
+
+Study Planner
+
+6
+
+Movie Watchlist
+
+7
+
+Habit Tracker
+
+8
+
+Event Planner
+
+9
+
+Notes App
+
+⚠️ This ensures no identical submissions
+
+Backend Requirements
+
+
+1. FastAPI Application
+
+
+You must implement:
+
+POST /items → Create item
+
+GET /items → Get all items
+
+GET /items/{id} → Get single item
+
+PUT /items/{id} → Update item
+
+DELETE /items/{id} → Delete item
+
+2. Data Model (Must Be Customized)
+
+
+Each student must define at least 4 fields, including:
+
+
+
+Example (Task Manager):
+
+{
+  "title": "Submit assignment",
+  "description": "Android + FastAPI",
+  "priority": "High",
+  "image": "img123.png",
+  "due_date": "2026-04-10"
+}
+⚠️ Students MUST:
+
+Add 1 unique field (e.g., difficulty, rating, category)
+
+Explain it in submission
+
+Image field can be skipped, but you won't get the full grade (reference Rubric).
+
+3. MongoDB Integration
+Use MongoDB (local or Atlas)
+
+Store all data in a collection
+
+Use _id properly
+
+Convert ObjectId to string
+
+4. Validation
+
+
+Use Pydantic models:
+
+Required fields
+
+Data types
+
+Default values where applicable
+
+5. Bonus (Required for A grade)
+
+
+At least ONE of:
+
+Filtering endpoint
+
+Search endpoint
+
+Sorting
+
+Pagination
+
+Image and Camera Integration.
+
+🧩 PART 3 — Android Mobile App (3 hours)
+🎯 Requirement
+
+
+Build a mobile app that connects to your backend.
+
+Mandatory Features
+
+
+1. List Screen
+Display all items from API
+
+Use:
+
+ListView OR RecyclerView
+
+Data must come from backend (not hardcoded)
+
+2. Add Screen
+Form to create new item
+
+Must include:
+
+Minimum 3 inputs
+
+Sends POST request to API
+
+3. Detail Screen
+Display item details
+
+Allow:
+
+Update OR Delete
+
+4. Architecture Requirements
+Use MVVM OR structured separation
+
+Use your preferred navigation
+
+Use Fragments with common ModelView, and one or more fragment will require its own MV (explain why when used)
+
+Use:
+
+Volley OR Retrofit
+
+Use:
+
+Model class (POJO)
+
+5. UI Requirements
+Must include:
+
+At least 1 custom layout of your choice
+
+Proper spacing and alignment
+
+Each student must:
+
+Come up with their color theme OR layout variation (no copying from others)
+
+🔒 Critical Non Functional Requirements 
+
+
+It is absolutely important to have the following attributes:
+
+
+1. Personalized Data
+Each student must use:
+
+Different domain (based on ID) lb.edu.aub.cmps279Spring26.{yourAUBNetUserName}
+
+Different field names
+
+2. Code Walkthrough (Mandatory)
+
+
+Students will be asked:
+
+Explain API endpoints
+
+Explain database structure
+
+Explain Android networking flow
+
+3. TA Verification 
+
+
+TA will:
+
+Ask you to modify your code live
+
+Example:
+
+Add a new field
+
+Change API response
+
+Add filter
+
+4. Code Similarity Check
+
+
+Submissions with:
+
+Identical structure
+
+Same variable names
+
+Same UI layout
+
+
+
+👉 Will receive 0
+
+📦 Deliverables
+
+
+Upload ONE ZIP file:
+
+
+
+1. Python Certificate
+
+
+2. Backend Code
+FastAPI project
+
+requirements.txt
+
+
+
+3. Android Project
+Full Android Studio project
+
+
+
+4. README (Very Important)
+
+
+Must include:
+
+Your application code documentation
+
+Your database schema
+
+API endpoints list
+
+Screenshots (mobile app)
+
+Video to demonstrate the full (DB, Backend, and all App)
+
+Challenges faced (minimum 5 lines)
+
+⏱️ Estimated Time Breakdown
+Task
+
+Time
+
+Python Course
+
+1.5–2 hrs
+
+Backend
+
+3 hrs
+
+Android App
+
+3 hrs
+
+Documentation
+
+0.5 hr
+
+Total
+
+~8 hrs
+
+📊 Grading Rubric (%)
+Component
+
+Weight
+
+Python Certificate
+
+15%
+
+Backend Functionality
+
+25%
+
+MongoDB Integration
+
+10%
+
+Android App
+
+Full working app (60%)
+
+Images with each item (15%)
+
+Clean readable code (10%)
+
+Usage of camera to add image to item (15%)
+
+40%
+
+Originality & Viva
+
+10%
+
+⚠️ Important Notes
+Late submission: -7.5% per day (this is very strict)
+
+No demo → automatic 0
+
+Copying or Plagiarism → disciplinary action
+
+Final Instructions
+
+
+This is not a coding exercise.
+This is a system-building assignment.
+You are expected to demonstrate understanding, integration, and ownership.
+
+
+Submission status
+Submission status	No attempt
+Grading status	Not graded
+Due date	Wednesday, 15 April 2026, 12:59 PM
+Time remaining	Assignment is overdue by: 14 hours 17 mins
+Last modified	-
+Submission comments	
+CommentsComments (0)
+Add submission
+You have not made a submission yet.
+Back
+(c) AUB. All rights reserved
+
+Copyright, Disclaimer

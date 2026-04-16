@@ -1,0 +1,49 @@
+**SYSTEM CONTEXT FOR CODER AGENT:**
+You are building the Android frontend for a full-stack CRUD application. You must strictly use the architectural patterns, libraries, and methods specified below. Do not introduce alternative libraries (e.g., no Compose, no Ktor, no Hilt) or architectural patterns outside of this spec. 
+
+### 1. Architecture & Core Setup
+* **Pattern:** MVVM (Model-View-ViewModel) using Android Architecture Components.
+* **UI Structure:** Single Activity (`MainActivity`) acting as a container, hosting multiple Fragments via `FragmentContainerView` or Navigation Component (`NavHostFragment`). 
+* **Binding:** Use View Binding and Data Binding. 
+    * *Gradle:* `buildFeatures { viewBinding true; dataBinding true }`
+    * *Fragment setup:* Inflate inside `onCreateView()` and nullify the reference in `onDestroyView()` (`binding = null`) to prevent memory leaks. Set up UI logic inside `onViewCreated()`.
+* **State Management:** Use `ViewModel` and `LiveData` / `MutableLiveData`.
+    * Use `ViewModelProvider(requireActivity()).get(SharedViewModel.class)` to share state (like the selected item ID) between the List Fragment and Detail Fragment.
+    * Update data using `setValue()` (main thread) or `postValue()` (background thread).
+    * Observe data in Fragments using `viewModel.getLiveData().observe(getViewLifecycleOwner(), ...)`
+
+### 2. Networking (Retrofit + Gson)
+* **Libraries:** Retrofit 2.9.0 and Gson for JSON parsing.
+    * *Dependencies:* `com.squareup.retrofit2:retrofit:2.9.0`, `com.squareup.retrofit2:converter-gson:2.9.0`
+* **Implementation:** * Create a POJO Model class for the specific domain (min 4 fields, 1 unique, plus an image/cover field).
+    * Define an API interface with `@GET`, `@POST`, `@PUT`, `@DELETE`.
+    * Build the Retrofit client: `Retrofit.Builder().baseUrl(URL).addConverterFactory(GsonConverterFactory.create()).build()`.
+    * Execute API calls from the `ViewModel`, updating `MutableLiveData` upon success/failure.
+
+### 3. Feature: List Screen & Infinite Scroll
+* **UI:** Use `RecyclerView` inside a Fragment.
+* **Layout:** `LinearLayoutManager`.
+* **Adapter:** Extend `RecyclerView.Adapter<MyViewHolder>`. Implement `onCreateViewHolder`, `onBindViewHolder`, and `getItemCount`.
+* **Infinite Scroll:** Attach a standard `RecyclerView.OnScrollListener` to the `RecyclerView`.
+    * Check if the user has reached the bottom (`LinearLayoutManager.findLastVisibleItemPosition()`).
+    * Trigger a paginated `GET` request in the `ViewModel`. Append the new results to the existing `LiveData` list and call `adapter.notifyDataSetChanged()` (or `notifyItemRangeInserted`).
+* **Image Loading:** Use Glide to load covers into the list items.
+    * *Dependency:* `com.github.bumptech.glide:glide`
+    * *Usage:* `Glide.with(context).load(url).into(imageView);`
+
+### 4. Feature: Add Screen & CameraX 
+* **Form:** A Fragment with at least 3 `EditText` inputs and a `Button` to submit a `POST` request.
+* **Camera Integration (Strict Slide Requirement):** You must use **CameraX** (not standard camera intents).
+    * *Dependencies:* `androidx.camera:camera-core:1.3.4`, `camera-camera2`, `camera-lifecycle`, `camera-view`.
+    * *Permissions:* Declare `<uses-permission android:name="android.permission.CAMERA"/>` in Manifest.
+    * *Runtime Check:* Use `ContextCompat.checkSelfPermission` and `ActivityCompat.requestPermissions` (Code 100).
+    * *Implementation:* Place a `PreviewView` in the layout. Bind the lifecycle to the Fragment. Capture the image to app-private storage, then upload it to the FastAPI backend (as multipart/form-data or Base64, depending on backend config) when creating the item.
+
+### 5. Feature: Detail & Edit/Delete Screen
+* **Navigation:** When an item is clicked in the `RecyclerView`, pass its ID via the Shared `ViewModel` or Fragment Arguments (`Bundle`). Navigate to the Detail Fragment.
+* **UI:** Display the item details (`TextView`s) and the cover image (`ImageView` via Glide).
+* **Actions:** Include "Update" and "Delete" buttons.
+    * **Delete:** Fires a `DELETE` request via Retrofit, pops the fragment backstack on success, and refreshes the list.
+    * **Update:** Opens a form (can reuse the Add form logic) to send a `PUT` request with modified fields.
+
+**UI Constraints:** Ensure proper alignment, spacing, and a distinct custom color theme per the grading rubric. Avoid default out-of-the-box styling.
