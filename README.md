@@ -14,13 +14,13 @@
 
 ## Screenshots
 
-| Book List | Search & Filter | Add Book - No Camera | Add Book - Camera Capture |
-|---|---|---|---|
-| ![Book List](screenshots/book_list.png) | ![Search](screenshots/search_filter.png) | ![Add Book](screenshots/add_book.png) | ![Camera](screenshots/camera.png) |
+| Book List | Add Book - No Camera | Add Book - Camera Capture |
+|---|---|---|
+| ![Book List](screenshots/book_list.png) | ![Add Book](screenshots/add_book.png) | ![Camera](screenshots/camera.png) |
 
-| Book Detail | Edit Book | Delete Confirmation | APK on Device |
-|---|---|---|---|
-| ![Detail](screenshots/book_detail.png) | ![Edit](screenshots/edit_book.png) | ![Delete](screenshots/delete.png) | ![Device](screenshots/device.png) |
+| Book Detail | Edit Book | Borrowed Book |
+|---|---|---|
+| ![Detail](screenshots/book_detail.png) | ![Edit](screenshots/edit_book.png) | ![borrowed](screenshots/borrow_book.png) |
 
 ---
 
