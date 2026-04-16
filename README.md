@@ -10,6 +10,8 @@
 
 [![Demo Video](https://img.youtube.com/vi/-eKaCjoVMCY/0.jpg)](https://www.youtube.com/watch?v=-eKaCjoVMCY)
 
+Fallback link: <https://www.youtube.com/watch?v=-eKaCjoVMCY>
+
 ---
 
 ## Screenshots
