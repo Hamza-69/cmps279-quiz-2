@@ -1,6 +1,7 @@
 # Book Library — Full Stack Mobile Application
 
-**Student:** Hamza El Rachdi  
+**Student:** Hamza El Rachdi
+**AUB NET**: hmr23
 **Student ID:** 202502882   
 **Course:** CMPS 279 — Mobile Back End, Spring 2025–26  
 
