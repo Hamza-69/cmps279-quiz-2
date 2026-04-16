@@ -8,7 +8,7 @@
 
 ## Demo Video
 
-> **[Watch on YouTube → PLACEHOLDER_YOUTUBE_LINK]**
+[![Demo Video](https://img.youtube.com/vi/-eKaCjoVMCY/0.jpg)](https://www.youtube.com/watch?v=-eKaCjoVMCY)
 
 ---
 
